@@ -1,10 +1,61 @@
-use std::fs;
-use utils::hello_world;
+use std::{env, fs, process};
 
-fn main() -> std::io::Result<()> {
-    let input = fs::read_to_string("../inputs/day0.txt")?;
-    let name = input.trim();
-    println!("Hello, {}!", name);
-    println!("{}", hello_world());
-    Ok(())
+mod days;
+
+fn main() {
+    // Expect a single integer argument: the day index (e.g. `cargo run -- 0`).
+    let mut args = env::args().skip(1);
+    let day_arg = match args.next() {
+        Some(s) => s,
+        None => {
+            eprintln!("Usage: cargo run -- <day_index>");
+            process::exit(1);
+        }
+    };
+
+    // Validate the integer input: non-negative integer
+    let day: usize = match day_arg.parse() {
+        Ok(n) => n,
+        Err(_) => {
+            eprintln!("Invalid day '{}'. Please provide a non-negative integer.", day_arg);
+            process::exit(1);
+        }
+    };
+
+    // Optional second argument selects part (1 or 2). If omitted, run both.
+    let part: Option<u8> = match args.next() {
+        Some(p_str) => match p_str.parse::<u8>() {
+            Ok(1) => Some(1),
+            Ok(2) => Some(2),
+            Ok(_) | Err(_) => {
+                eprintln!("Invalid part '{}'. Provide 1 or 2.", p_str);
+                process::exit(1);
+            }
+        },
+        None => None,
+    };
+
+    // Read the corresponding input file (relative to the solutions directory)
+    let input_path = format!("../inputs/day{}.txt", day);
+    let input = match fs::read_to_string(&input_path) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to read {}: {}", input_path, e);
+            process::exit(1);
+        }
+    };
+
+    // Dispatch to the appropriate day's solution and part(s).
+    match (day, part) {
+        (0, Some(1)) => days::day0::part1(&input),
+        (0, Some(2)) => days::day0::part2(&input),
+        (0, None) => {
+            days::day0::part1(&input);
+            days::day0::part2(&input);
+        }
+        _ => {
+            eprintln!("No solution implemented for day {}", day);
+            process::exit(1);
+        }
+    }
 }
