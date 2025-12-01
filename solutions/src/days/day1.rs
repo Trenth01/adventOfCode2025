@@ -38,7 +38,7 @@ pub fn part2(input: &str) {
                 count += 1;
             }
         }
-        position = position.rem_euclid(100);
+        position %= 100;
     };
     print!("Part 2 result: {}\n", count);
 }
