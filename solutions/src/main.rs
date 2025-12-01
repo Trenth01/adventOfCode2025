@@ -3,7 +3,6 @@ use std::{env, fs, process};
 mod days;
 
 fn main() {
-    // Expect a single integer argument: the day index (e.g. `cargo run -- 0`).
     let mut args = env::args().skip(1);
     let day_arg = match args.next() {
         Some(s) => s,
@@ -13,7 +12,6 @@ fn main() {
         }
     };
 
-    // Validate the integer input: non-negative integer
     let day: usize = match day_arg.parse() {
         Ok(n) => n,
         Err(_) => {
@@ -49,6 +47,12 @@ fn main() {
     match (day, part) {
         (0, Some(1)) => days::day0::part1(&input),
         (0, Some(2)) => days::day0::part2(&input),
+        (1, Some(1)) => days::day1::part1(&input),
+        (1, Some(2)) => days::day1::part2(&input),
+        (1, None) => {
+            days::day1::part1(&input);
+            days::day1::part2(&input);
+        }
         (0, None) => {
             days::day0::part1(&input);
             days::day0::part2(&input);
