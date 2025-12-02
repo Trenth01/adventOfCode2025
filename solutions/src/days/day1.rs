@@ -18,29 +18,37 @@ pub fn part1(input: &str) {
 }
 
 pub fn part2(input: &str) {
-    let instrutions = input.split('\n');
-    let mut position: i32 = 50;
-    let mut count = 0;
-    for instruction in instrutions {
-        let old_sign: i32 = position.signum();
-        let (direction, distance) = instruction.split_at(1);
-        let distance: i32 = distance.trim().parse().unwrap();
+    let instructions = input.trim().lines();
+    let mut position: i64 = 50;
+    let mut count: i64 = 0;
+
+    for instruction in instructions {
+        if instruction.is_empty() { continue; }
+        let (direction, distance_str) = instruction.split_at(1);
+        let distance: i64 = distance_str.trim().parse().unwrap();
+        let old_pos = position;
+
         match direction {
             "L" => {position -= distance},
             "R" => {position += distance},
             _ => {},
         }
-        let new_sign: i32 = position.signum();
-        if position <= 0 || position >= 100 {
-            let clicks = (position / 100).abs();
-            count += (position / 100).abs();
-            if (old_sign != new_sign) && (position % 100 != 0) {
-                count += 1;
-            }
+
+        let new_pos = position;
+
+        if new_pos > old_pos {
+            // Right rotation: (old_pos, new_pos]
+            // Count multiples of 100
+            count += new_pos.div_euclid(100) - old_pos.div_euclid(100);
+        } else {
+            // Left rotation: [new_pos, old_pos)
+            // We want to count how many multiples of 100 are in the range.
+            // Since we are moving downwards, we cross a multiple X if we go from >= X to < X.
+            // This is equivalent to counting multiples in (new_pos - 1, old_pos - 1]
+            count += (old_pos - 1).div_euclid(100) - (new_pos - 1).div_euclid(100);
         }
-        position %= 100;
-    };
-    print!("Part 2 result: {}\n", count);
+    }
+    println!("Part 2 result: {}", count);
 }
 
 pub fn solve(input: &str) {

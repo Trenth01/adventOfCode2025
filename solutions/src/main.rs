@@ -47,16 +47,13 @@ fn main() {
     match (day, part) {
         (0, Some(1)) => days::day0::part1(&input),
         (0, Some(2)) => days::day0::part2(&input),
+        (0, None) => days::day0::solve(&input),
         (1, Some(1)) => days::day1::part1(&input),
         (1, Some(2)) => days::day1::part2(&input),
-        (1, None) => {
-            days::day1::part1(&input);
-            days::day1::part2(&input);
-        }
-        (0, None) => {
-            days::day0::part1(&input);
-            days::day0::part2(&input);
-        }
+        (1, None) => days::day1::solve(&input),
+        (2, Some(1)) => days::day2::part1(&input),
+        (2, Some(2)) => days::day2::part2(&input),
+        (2, None) => days::day2::solve(&input),
         _ => {
             eprintln!("No solution implemented for day {}", day);
             process::exit(1);
