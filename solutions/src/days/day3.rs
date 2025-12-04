@@ -17,29 +17,42 @@ pub fn part1(input: &str) {
 }
 
 pub fn part2(input: &str) {
-    let banks = input.lines();
     let mut sum: u64 = 0;
-    for bank in banks {
+
+    for bank in input.lines() {
         const RADIX: u32 = 10;
-        let joltages: Vec<u32> = bank.chars().map(|c| c.to_digit(RADIX).expect("conversion error")).collect();
+        let joltages: Vec<u32> =
+            bank.chars().map(|c| c.to_digit(RADIX).unwrap()).collect();
 
-        let (mut idx, lmax) =
-            index_and_max(&joltages[..joltages.len().saturating_sub(12)])
-                .expect("left slice empty");
+        let total = joltages.len();
 
-        sum += (lmax as u64) * 10_u64.pow(11);
-        for i in (0..10).rev() {
-            let slice = &joltages[idx.saturating_add(1)..joltages.len().saturating_sub(i+1)];
-            let (nidx, max) = index_and_max(slice).expect("slice empty");
-            sum += (max as u64) * 10_u64.pow(i.saturating_add(1) as u32);
-            idx += nidx + 1;
+        // FIX: start at -1 without using usize::MAX
+        let mut idx: isize = -1;
+
+        let mut digits_left = 12;
+        let mut value: u64 = 0;
+
+        for _pos in 0..12 {
+            let pick_left = digits_left - 1;
+
+            // FIX: compute bounds safely using signed indexing
+            let start = (idx + 1) as usize;
+            let end = total - pick_left;
+
+            let (rel, maxdigit) = index_and_max(&joltages[start..end]).unwrap();
+
+            // FIX: update idx safely
+            idx = (start + rel) as isize;
+
+            // FIX: avoid overflow using u64
+            value = value * 10 + (maxdigit as u64);
+
+            digits_left -= 1;
         }
-        let (_idx, rmax) =
-            index_and_max(&joltages[idx.saturating_add(1) ..])
-                .expect("right slice empty");
-        sum += rmax as u64;
 
+        sum += value;
     }
+
     println!("Part 2 result: {}", sum);
 }
 
