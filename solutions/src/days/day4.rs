@@ -1,5 +1,5 @@
 pub fn part1(input: &str) {
-    let mut grid: Vec<Vec<char>> = input
+    let grid: Vec<Vec<char>> = input
         .lines()
         .map(|line| line.chars().collect())
         .collect();
@@ -46,7 +46,6 @@ pub fn part2(input: &str) {
 
                 if cell == '@' && neighbors < 4 {
                     it_count+=1;
-                    // cell = .
                     grid[x][y] = '.';
                 } 
             }
