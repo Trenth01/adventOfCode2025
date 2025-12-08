@@ -1,5 +1,3 @@
-use std::ffi::c_char;
-
 pub fn part1(input: &str) {
     let rows = input.lines();
     let mut operations: Vec<Vec<String>> = Vec::new();

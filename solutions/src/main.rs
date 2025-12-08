@@ -66,6 +66,9 @@ fn main() {
         (6, Some(1)) => days::day6::part1(&input),
         (6, Some(2)) => days::day6::part2(&input),
         (6, None) => days::day6::solve(&input),
+        (7, Some(1)) => days::day7::part1(&input),
+        (7, Some(2)) => days::day7::part2(&input),
+        (7, None) => days::day7::solve(&input),
         _ => {
             eprintln!("No solution implemented for day {}", day);
             process::exit(1);
