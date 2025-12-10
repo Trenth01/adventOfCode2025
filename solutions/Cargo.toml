@@ -5,3 +5,6 @@ edition = "2021"
 
 [dependencies]
 utils = { path = "../utils" }
+itertools = "0.14"
+petgraph = "0.8.3"
+graphics-shapes = "0.4.4"
